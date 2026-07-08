@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "modnakiecka-bq": {
+      "command": "python",
+      "args": ["server.py"],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_APPLICATION_CREDENTIALS:-sa-key.json}"
+      }
+    }
+  }
+}

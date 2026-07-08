@@ -1,0 +1,11 @@
+# Klucze i sekrety — NIGDY nie commitować
+sa-key.json
+*.json.key
+*-credentials.json
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
