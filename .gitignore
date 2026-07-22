@@ -1,5 +1,7 @@
 # Klucze i sekrety — NIGDY nie commitować
 sa-key.json
+sa-key.json.*
+*sa-key*
 *.json.key
 *-credentials.json
 .env
