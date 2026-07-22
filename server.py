@@ -1,16 +1,16 @@
 """
 Modna Kiecka BigQuery MCP Server
 ================================
-Wierna kopia serwera MCP WitBee/WitCloud dla JEDNEGO projektu:
+Wierna kopia serwera MCP platformy danych AIO dla JEDNEGO projektu:
 hurtownia AIO w BigQuery klienta Modna Kiecka.
 
-Roznice vs oryginal WitBee:
+Roznice vs oryginalna platforma:
 - brak multi-projektowosci (list_projects) — serwer jest przypisany do projektu
   Modna Kiecka; load_project nie przyjmuje argumentow,
-- dokumentacja WitBee (AIO) jest wbudowana lokalnie w docs/ (kopia 1:1),
+- dokumentacja AIO jest wbudowana lokalnie w docs/ (kopia 1:1),
   a sciezki tabel w przykladach SQL sa podmieniane w locie na fizyczne
   nazwy z sufiksem projektu,
-- brak business contexts / context log (funkcje platformy WitBee).
+- brak business contexts / context log (funkcje platformy zrodlowej).
 
 Konfiguracja przez zmienne srodowiskowe:
   GOOGLE_APPLICATION_CREDENTIALS  sciezka do klucza JSON service account
@@ -30,7 +30,7 @@ AIO_SUFFIX = "_szdsp"
 MAX_BYTES_BILLED = int(os.environ.get("BQ_MAX_BYTES_BILLED", str(4 * 1024**3)))
 DOCS_DIR = Path(__file__).parent / "docs"
 
-# Nazwy logiczne uzywane w dokumentacji WitBee -> fizyczne tabele w BQ.
+# Nazwy logiczne uzywane w dokumentacji AIO -> fizyczne tabele w BQ.
 # Dokumentacja historycznie uzywa nazw bez "4" i z "orders_products".
 DOC_TABLE_MAP = {
     "aio_ad_systems": "aio_ad_systems" + AIO_SUFFIX,
@@ -78,7 +78,7 @@ def _strip_sql_comments(sql: str) -> str:
 
 
 def _localize_doc(content: str) -> str:
-    """Podmienia placeholdery `witcloud_{project-id}.aio_x` z dokumentacji WitBee
+    """Podmienia placeholdery `witcloud_{project-id}.aio_x` z dokumentacji AIO
     na pelne fizyczne sciezki tego projektu."""
 
     def repl(m):
@@ -101,7 +101,10 @@ def load_project() -> str:
     identifiers (googleCloudProjectId, datasetId), available data sources and
     documentation pointers. REQUIRED: immediately after calling this tool, call
     read_document with slug "introduction" — that document contains all
-    instructions on how to guide the user through the session."""
+    instructions on how to guide the user through the session.
+    For any GA4 analysis, also read "ga4/introduction" — the raw GA4 export has a
+    permanent 23-day hole (2026-06-16..2026-07-08) that must never be reported as
+    a traffic drop."""
     return json.dumps(
         {
             "project": {
@@ -139,7 +142,7 @@ def list_tables(search: str = "", dataSourceId: str = "") -> str:
     for t in _client().list_tables(f"{GCP_PROJECT_ID}.{DATASET_ID}"):
         base = _base_table_name(t.table_id)
         if base is None:
-            continue  # nieklasyfikowane tabele sa ukrywane (jak w WitBee)
+            continue  # nieklasyfikowane tabele sa ukrywane (zgodnie z modelem AIO)
         full = _client().get_table(f"{GCP_PROJECT_ID}.{DATASET_ID}.{t.table_id}")
         partitioning = None
         if full.time_partitioning:
@@ -233,7 +236,18 @@ def run_query(query: str, maxResults: int = 1000) -> str:
       `_PARTITIONTIME` (or `_PARTITIONDATE`), NOT on the `date` column.
     - Only SELECT queries are allowed; DML keywords are rejected
     - Cross-table JOIN is supported because everything lives in one dataset
-    - maxResults: default 1000, max 10000."""
+    - maxResults: default 1000, max 10000
+
+    GA4 datasets (outside the AIO dataset, reachable only through this tool —
+    list_tables/get_table_schema/describe_columns do NOT see them):
+    - `bq-modnakiecka.analytics_291537403.events_*` — raw events, date-sharded,
+      filter with `_TABLE_SUFFIX`. 🚨 PERMANENT HOLE 2026-06-16..2026-07-08
+      (connector reconnect). NEVER report it as a traffic drop — exclude it with
+      `AND _TABLE_SUFFIX NOT BETWEEN '20260616' AND '20260708'`, or take that
+      window from GA4_API which does cover it.
+    - `bq-modnakiecka.GA4_API.p_ga4_<Report>_291537403` — aggregated GA4 reports,
+      NO date column, filter on `_PARTITIONDATE`. Own hole: 2026-03-31..2026-05-31.
+    Read `ga4/introduction` before any GA4 analysis."""
     from google.cloud import bigquery
 
     cleaned = _strip_sql_comments(query)
