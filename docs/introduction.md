@@ -1,7 +1,7 @@
-# WitCloud MCP master document — Modna Kiecka (kopia lokalna)
+# AIO MCP master document — Modna Kiecka (kopia lokalna)
 
-You are connected to the Modna Kiecka data warehouse — a local copy of the WitCloud
-(WitBee) data platform MCP, scoped to a single project. This document is your strict
+You are connected to the Modna Kiecka data warehouse — a local copy of the AIO
+data platform MCP, scoped to a single project. This document is your strict
 chronological guide for conducting a session. You MUST follow these phases in order.
 
 ---
@@ -20,10 +20,17 @@ Before greeting the user or asking any questions, perform these steps in the bac
 Once the project is loaded, you MUST generate exactly ONE message to the user.
 
 **Part 1: Present Data Sources**
-This project has one data source: **All-in-One (AIO)** — a unified marketing &
-ecommerce dataset covering all connected channels (Google Ads, Facebook Ads, the
-ecommerce platform, GA4, etc.), ideal for cross-channel reporting, attribution,
-and trend analysis. Present it in readable form (no raw JSON).
+This project has two families of data:
+
+1. **All-in-One (AIO)** — a unified marketing & ecommerce dataset covering all
+   connected channels (Google Ads, Facebook Ads, the ecommerce platform, GA4,
+   etc.), ideal for cross-channel reporting, attribution, and trend analysis.
+   This is the data source returned by `load_project`.
+2. **GA4 (two datasets)** — raw event-level export plus aggregated GA4 API
+   reports, for anything needing GA4 granularity or GA4-UI-matching metrics.
+   See `ga4/introduction`.
+
+Present them in readable form (no raw JSON).
 
 **Part 2: Ask for Direction (MANDATORY)**
 At the end of this EXACT SAME message, you MUST ask the user these two questions:
@@ -45,6 +52,13 @@ before writing any SQL.
 
 ### Step 1: Load the Data Source Document
 Call `read_document("aio/introduction")`.
+
+🚨 **If the analysis involves GA4 data or any date range in 2026, you MUST also
+call `read_document("ga4/introduction")` before writing SQL.** The raw GA4 export
+has a permanent 23-day hole (`2026-06-16` … `2026-07-08`) caused by reconnecting
+the connector. Never report it as a traffic drop — exclude it, or take that window
+from the `GA4_API` dataset, which does cover it. That document also explains which
+of the two GA4 datasets to use, and their mandatory partition filters.
 
 ### Step 2: Understand the Tables
 Before writing any SQL, you must:
@@ -79,12 +93,25 @@ session. If the user asks to switch format mid-session, confirm and apply immedi
 
 ## Documentation Paths Reference
 
-| Path                         | Content                                    |
-|------------------------------|--------------------------------------------|
-| `llm-tips/claude`            | Presentation tips for Claude               |
-| `aio/introduction`           | AIO overview, tables, and context guidance |
-| `aio/tables/<baseTableName>` | Docs for a specific AIO table              |
+| Path                         | Content                                            |
+|------------------------------|----------------------------------------------------|
+| `llm-tips/claude`            | Presentation tips for Claude                       |
+| `aio/introduction`           | AIO overview, tables, and context guidance         |
+| `aio/tables/<baseTableName>` | Docs for a specific AIO table                      |
+| `ga4/introduction`           | GA4 raw export + GA4_API reports, data holes, rules |
 
-Note vs the original WitCloud MCP: this copy has no multi-project selection and no
+**Datasets in this project** (`bq-modnakiecka`, EU):
+
+| Dataset                        | What it is                          | Reachable via              |
+|--------------------------------|-------------------------------------|----------------------------|
+| `witcloud_qfmdjgmqib6ghnpoimik`| AIO unified marketing data          | all tools                  |
+| `analytics_291537403`          | GA4 raw event-level export          | `run_query` only           |
+| `GA4_API`                      | GA4 aggregated API reports          | `run_query` only           |
+| `analytics_291537403_backup`   | cold backup of the raw export       | do not query, do not delete|
+
+`list_tables` / `get_table_schema` / `describe_columns` only ever see the AIO
+dataset. For the GA4 datasets use `run_query` with fully qualified names.
+
+Note vs the original AIO platform MCP: this copy has no multi-project selection and no
 business-context / context-log tools — it is permanently scoped to the Modna Kiecka
 project.
