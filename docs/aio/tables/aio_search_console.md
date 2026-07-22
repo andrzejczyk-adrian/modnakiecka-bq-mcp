@@ -1,7 +1,7 @@
 # Table: Search Console
 
-WIP — dokumentacja tej tabeli w platformie WitBee ma status "work in progress"
-(stan identyczny w oryginalnym MCP WitCloud).
+WIP — dokumentacja tej tabeli ma status "work in progress"
+(stan identyczny w oryginalnej platformie źródłowej).
 
 Praktyczne uwagi z pracy z tą tabelą:
 

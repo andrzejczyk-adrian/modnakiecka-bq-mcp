@@ -1,8 +1,8 @@
 # Table: aio_main
 
 Fundament modelu AIO — kompletne, zunifikowane źródło danych (~230 kolumn), na którym
-zbudowane są wszystkie datamarty `aio_*`. **Brak oficjalnej dokumentacji WitBee dla tej
-tabeli** (stan również w oryginalnym MCP WitCloud).
+zbudowane są wszystkie datamarty `aio_*`. **Brak oficjalnej dokumentacji dla tej
+tabeli** (stan również w oryginalnej platformie).
 
 Jak z niej korzystać:
 

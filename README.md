@@ -1,15 +1,15 @@
 # modnakiecka-bq-mcp
 
 Serwer MCP (Model Context Protocol) łączący **Claude Code** z hurtownią danych
-**WitBee AIO w BigQuery** klienta **Modna Kiecka** — projekt GCP **`bq-modnakiecka`**,
+**AIO w BigQuery** klienta **Modna Kiecka** — projekt GCP **`bq-modnakiecka`**,
 dataset `witcloud_qfmdjgmqib6ghnpoimik`.
 
-To **wierna kopia MCP WitBee/WitCloud** zawężona do jednego projektu: te same
+To **dedykowany serwer MCP** zawężony do jednego projektu: te same
 narzędzia, ten sam przepływ pracy (load_project → introduction → list_tables →
 schema → SQL) i wbudowana kopia oficjalnej dokumentacji AIO. Klient nie potrzebuje
-dostępu do platformy WitBee — wystarczy dostęp do własnego BigQuery.
+dostępu do zewnętrznej platformy danych — wystarczy dostęp do własnego BigQuery.
 
-## Możliwości (narzędzia MCP — 1:1 z WitBee)
+## Możliwości (narzędzia MCP)
 
 | Narzędzie | Opis |
 |---|---|
@@ -18,10 +18,10 @@ dostępu do platformy WitBee — wystarczy dostęp do własnego BigQuery.
 | `get_table_schema` | schemat tabeli (pola, typy, tryby) |
 | `describe_columns` | opisy biznesowe wybranych kolumn |
 | `run_query` | **wyłącznie SELECT/WITH**, limit skanu 4 GB/zapytanie, max 10 000 wierszy |
-| `list_documents` / `read_document` | wbudowana dokumentacja AIO (kopia z WitBee) |
+| `list_documents` / `read_document` | wbudowana dokumentacja AIO |
 
-Różnice vs oryginał WitBee: brak wyboru projektu (serwer na stałe wskazuje Modną
-Kieckę), brak business contexts / context log (to funkcje platformy WitBee).
+Różnice vs oryginalna platforma: brak wyboru projektu (serwer na stałe wskazuje Modną
+Kieckę), brak business contexts / context log (to funkcje platformy źródłowej).
 Przykłady SQL w dokumentacji są automatycznie lokalizowane do pełnych fizycznych
 nazw tabel (`bq-modnakiecka.witcloud_qfmdjgmqib6ghnpoimik.aio_*_szdsp`).
 
@@ -60,7 +60,7 @@ Test w Claude Code: `Załaduj projekt Modna Kiecka i pokaż dzienne przychody vs
 server.py            serwer MCP (Python, FastMCP)
 .mcp.json            rejestracja serwera dla Claude Code (project scope)
 requirements.txt     zależności
-docs/                kopia dokumentacji WitBee (master guide, AIO, 10 tabel)
+docs/                kopia dokumentacji AIO (master guide, AIO, 10 tabel)
   introduction.md    przewodnik sesji (fazy 1-3, reguły SQL)
   aio/...            dokumentacja modelu AIO i tabel
 INSTALACJA.md        instrukcja instalacji od zera + prompt do wklejenia

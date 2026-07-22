@@ -1,6 +1,6 @@
 # Instalacja od zera — nowy komputer + Claude Code + hurtownia Modna Kiecka (MCP)
 
-Instrukcja dla projektu GCP **`bq-modnakiecka`** (hurtownia WitBee AIO w BigQuery).
+Instrukcja dla projektu GCP **`bq-modnakiecka`** (hurtownia danych AIO w BigQuery).
 Czas: ~15 minut. Wymagania wstępne: konto Claude (Pro/Max lub Console) oraz **klucz
 service account (`sa-key.json`)** otrzymany od administratora hurtowni.
 
@@ -81,7 +81,7 @@ Jeżeli masz już zainstalowane Claude Code, Git i Pythona (kroki 1–2), **cał
 może zrobić się sama**. Uruchom `claude` w dowolnym folderze roboczym i wklej:
 
 ```text
-Skonfiguruj mi dostęp do hurtowni danych Modna Kiecka (model WitBee AIO w BigQuery,
+Skonfiguruj mi dostęp do hurtowni danych Modna Kiecka (model danych AIO w BigQuery,
 projekt GCP bq-modnakiecka) przez MCP:
 
 1. Sklonuj repo https://github.com/andrzejczyk-adrian/modnakiecka-bq-mcp.git do
