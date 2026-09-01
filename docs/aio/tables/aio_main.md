@@ -18,6 +18,12 @@ Jak z niej korzystać:
   `Ad Systems` (koszty). Metryki łącz przez GROUP BY + COALESCE po wymiarach,
   **nie przez JOIN** (ryzyko fanout).
 - **Zawsze filtruj `_PARTITIONTIME`**, nie kolumnę `date`.
+- 🚨 **Okno zdublowanych zamówień 2026-06-28 … 2026-08-02**: wiersze `Ecommerce`
+  występują podwójnie — z `MK shoper` ORAZ z równoległego feedu
+  `MK Custom Ecommerce` (te same zamówienia; feed wygaszony na początku sierpnia
+  2026). Sumy przychodu/zamówień w tym oknie są ~2× zawyżone bez filtra
+  `data_source_name = 'MK shoper'` (albo deduplikacji po `ecomm_order_id`).
+  Szczegóły: `aio/tables/aio_ecommerce_orders`.
 - `report_currency` = waluta zunifikowana; pola `original_*` = waluta źródła.
 - Do typowych analiz preferuj dedykowane datamarty (`aio_ad_systems`,
   `aio_ecommerce_orders`, `aio_ga4_sessions`...) — `aio_main` tylko gdy potrzebujesz

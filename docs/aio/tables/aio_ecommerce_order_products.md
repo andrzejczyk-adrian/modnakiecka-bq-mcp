@@ -98,6 +98,11 @@ The table has a UNION-based structure, which means that **one row represents one
 
 ## Important Notes and Limitations ⚠️
 
+- 🚨 **Duplicate-orders window 2026-06-28 … 2026-08-02 (Modna Kiecka):** order
+  product rows exist TWICE — from `MK shoper` AND from the parallel feed
+  `MK Custom Ecommerce` (same orders, feed switched off in early August 2026).
+  Revenue/quantity sums over that window are ~2× inflated unless you filter
+  `data_source_name = 'MK shoper'`. Details in `aio/tables/aio_ecommerce_orders`.
 - **Key rule for date filtering:** The table is partitioned. To keep your queries fast and inexpensive, **always filter data using the \_PARTITIONTIME pseudo-column**.
 - **Two types of rows:** Remember that this table contains two kinds of data. Rows with marketing data (data_source_type = 'Ad Systems') will not include product details (e.g., item_id will be NULL), and vice versa.
 - **No order-level metrics:** This table is optimized for product analysis. It is **not suitable for analyzing aggregate order-level values**, such as shipping costs or discounts for the entire cart. For that purpose, use the aio_ecommerce_orders table.

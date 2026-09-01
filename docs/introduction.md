@@ -60,6 +60,17 @@ the connector. Never report it as a traffic drop — exclude it, or take that wi
 from the `GA4_API` dataset, which does cover it. That document also explains which
 of the two GA4 datasets to use, and their mandatory partition filters.
 
+🚨 **Duplicate-orders window `2026-06-28` … `2026-08-02`:** during this period the
+AIO ecommerce tables (`aio_ecommerce_orders`, `aio_ecommerce_order_products`,
+`aio_main` Ecommerce rows) contain each order TWICE — once from `MK shoper` and
+once from the parallel feed `MK Custom Ecommerce` (99.8% identical order_ids;
+switched off in early August). Any SUM of revenue/orders over that window without
+a source filter is ~2× inflated. Always add `data_source_name = 'MK shoper'` (or
+deduplicate by `order_id`) when the range touches those dates. Note: the retired
+`MK Custom Ecommerce` feed was also the ONLY source of mobile-app orders
+(order_id range 300,000,xxx) — since 2026-08-03 app orders are absent from the
+warehouse entirely (web-only `MK shoper` remains).
+
 ### Step 2: Understand the Tables
 Before writing any SQL, you must:
 1. Call `list_tables` to get the full `tableId` (which always has a suffix, e.g.,

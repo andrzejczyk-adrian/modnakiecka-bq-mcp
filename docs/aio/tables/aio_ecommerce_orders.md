@@ -98,6 +98,15 @@ This design allows for very simple daily aggregations to compare revenue and cos
 
 ## Important Notes and Limitations ⚠️
 
+- 🚨 **Duplicate-orders window 2026-06-28 … 2026-08-02 (Modna Kiecka):** in this
+  period orders exist TWICE — from `MK shoper` AND from the parallel feed
+  `MK Custom Ecommerce` (99.8% identical `order_id`s; feed switched off in early
+  August 2026). Revenue/order sums over that window are ~2× inflated unless you
+  filter `data_source_name = 'MK shoper'` or deduplicate by `order_id`. The same
+  duplication affects `aio_ecommerce_order_products` and the Ecommerce rows of
+  `aio_main`. The retired feed was also the only source of mobile-app orders
+  (`order_id` range 300,000,xxx) — from 2026-08-03 app orders are missing from
+  the warehouse (audit 2026-09-01).
 - **Key rule for date filtering:** The table is partitioned by data ingestion time. To keep your queries fast and inexpensive, **always filter data using the pseudo-column \_PARTITIONTIME**, not the date column.
 - **Two types of rows:** Remember that this table contains two kinds of data. Rows with data_source_type = 'Ad Systems' will not include order details (e.g., order_id will be NULL), and vice versa. When summing metrics, you don't need to worry about this, but when filtering, it's worth keeping in mind.
 - **Customer analysis:** The customer_is_new field is extremely useful for segmentation and analysis of customer lifetime value (LTV).
