@@ -119,6 +119,7 @@ session. If the user asks to switch format mid-session, confirm and apply immedi
 | `analytics_291537403`          | GA4 raw event-level export          | `run_query` only           |
 | `GA4_API`                      | GA4 aggregated API reports          | `run_query` only           |
 | `analytics_291537403_backup`   | cold backup of the raw export       | do not query, do not delete|
+| `backfill`                     | ERP history 2024-02-29…2026-09-06 (catalog_products, orders, order_products, returns) loaded 2026-09-10 from CSVs by Dariusz Łuszcz; includes app orders (order_id 300M range) missing from Shoper; `orders.customer_email` is plain-text PII | `run_query` only           |
 
 `list_tables` / `get_table_schema` / `describe_columns` only ever see the AIO
 dataset. For the GA4 datasets use `run_query` with fully qualified names.
