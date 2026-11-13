@@ -9,6 +9,8 @@ każdej sesji uruchomionej w tym folderze. Kopia wzorcowa: repo `modnakiecka-bq-
   Gdy używasz pojęcia (MER, przychód brutto, partycja), wyjaśnij je jednym zdaniem.
 - Zanim policzysz coś nowego, powiedz w 1-2 zdaniach, skąd weźmiesz dane i za jaki okres.
 - Wynik podawaj z okresem, źródłem i zastrzeżeniami (np. „ostatnie dni mogą jeszcze się zmienić”).
+- Aktualizacja (gdy użytkownik o nią prosi albo raz w miesiącu): CZĘŚĆ 7 instrukcji
+  `~/ModnaKiecka/modnakiecka-bq-mcp/INSTALACJA_PRACOWNICY.md`.
 - Jeśli instalacja nie jest zakończona (brak serwera `modnakiecka-bq` w `/mcp`), wróć do instrukcji
   `~/ModnaKiecka/modnakiecka-bq-mcp/INSTALACJA_PRACOWNICY.md` (gdy jej nie ma - pobierz ją poleceniem
   `curl -fsSL https://raw.githubusercontent.com/andrzejczyk-adrian/modnakiecka-bq-mcp/main/INSTALACJA_PRACOWNICY.md -o INSTALACJA_PRACOWNICY.md`
@@ -18,7 +20,7 @@ każdej sesji uruchomionej w tym folderze. Kopia wzorcowa: repo `modnakiecka-bq-
 
 - Serwer MCP `modnakiecka-bq` (narzędzia: `load_project`, `list_tables`, `get_table_schema`, `describe_columns`,
   `run_query`, `list_documents`, `read_document`). Tylko odczyt (SELECT/WITH), maks. 4 GB skanu na zapytanie.
-- Projekt Google Cloud: `bq-modnakiecka`, region EU. Konto serwisowe pracownika: `modna-kiecka-N` (tylko odczyt).
+- Projekt Google Cloud: `bq-modnakiecka`, region EU. Konto serwisowe pracownika: `modna-kiecka-N` (N = 1-4 albo `biuro`; tylko odczyt).
 - **Plik klucza `~/.modnakiecka/modna-kiecka-N.json` to sekret.** Nigdy go nie czytaj, nie wyświetlaj, nie przeszukuj
   (Read, Grep, cat, type) i nie kopiuj. Do danych używaj serwera MCP albo skryptów z `modnakiecka-bq-mcp/pracownicy/`,
   które dostają tylko ścieżkę do klucza.

@@ -15,7 +15,7 @@ Większość pracy wykona za Ciebie Claude Code - Ty tylko zatwierdzasz kolejne 
    Zapytaj administratora, którym kontem masz się logować.
    Jeśli to Twoje prywatne konto (Pro/Max): na claude.ai wejdź w **Ustawienia > Prywatność** i wyłącz
    **„Pomóż ulepszać Claude”** - będziesz pracować na danych firmy.
-2. **Numer konta (1-4) i plik klucza** od administratora (Adriana).
+2. **Numer konta (1, 2, 3, 4 albo „biuro”) i plik klucza** od administratora albo kierownika zespołu.
 3. **Prawo do instalowania programów** na komputerze. Na komputerze służbowym bez tych praw poproś o pomoc dział IT.
 4. Potrzebujesz **Claude Code w oknie poleceń** (terminalu). Aplikacja Claude na komputer ani rozszerzenie do
    VS Code nie wystarczą.
@@ -31,9 +31,10 @@ do hurtowni: daje dostęp tylko do odczytu danych, ale i tak nie wolno go nikomu
 | 2 | Modna Kiecka 2 | `modna-kiecka-2@bq-modnakiecka.iam.gserviceaccount.com` | `modna-kiecka-2.json` |
 | 3 | Modna Kiecka 3 | `modna-kiecka-3@bq-modnakiecka.iam.gserviceaccount.com` | `modna-kiecka-3.json` |
 | 4 | Modna Kiecka 4 | `modna-kiecka-4@bq-modnakiecka.iam.gserviceaccount.com` | `modna-kiecka-4.json` |
+| biuro | Biuro Modna Kiecka | `modna-kiecka-biuro@bq-modnakiecka.iam.gserviceaccount.com` | `modna-kiecka-biuro.json` |
 
-Administrator powie Ci, **który numer jest Twój**, i przekaże plik klucza bezpiecznym kanałem.
-W całej instrukcji `N` oznacza Twój numer (1, 2, 3 albo 4).
+Administrator albo kierownik zespołu powie Ci, **który numer jest Twój**, i przekaże plik klucza osobno,
+innym kanałem niż e-mail. W całej instrukcji `N` oznacza Twój numer konta (1, 2, 3, 4 albo `biuro`).
 
 Wszystkie konta mają te same uprawnienia: **odczyt danych BigQuery + uruchamianie zapytań** w projekcie
 `bq-modnakiecka`. Nie mogą niczego zmienić ani usunąć.
@@ -171,7 +172,8 @@ z tym, co Claude właśnie zapowiedział - wybierz **Yes** (strzałki + Enter). 
   w instrukcji są pełne ścieżki. Wyjątek: blok Windows w kroku 2.8 uruchom w całości jednym wywołaniem.
 - Folder roboczy: `~/ModnaKiecka` (Windows: `C:\Users\<nazwa>\ModnaKiecka`). Klucz trafi do `~/.modnakiecka/`
   (poza folderem roboczym, żeby nie był przypadkiem czytany).
-- `N` w poleceniach zastępuj numerem konta, który podał użytkownik.
+- `N` w poleceniach zastępuj numerem konta, który podał użytkownik (1, 2, 3, 4 albo `biuro` - wtedy plik to
+  `modna-kiecka-biuro.json`, a konto `modna-kiecka-biuro@...`).
 
 ### Audyt - sprawdź i zanotuj wynik każdego punktu
 
@@ -188,7 +190,7 @@ Uruchom sprawdzenia (bez instalowania czegokolwiek) i pokaż użytkownikowi tabe
 | 1.7 | Bieżący folder | `pwd` | `pwd` | `~/ModnaKiecka` |
 | 1.8 | Serwery MCP | `claude mcp list` | `claude mcp list` | informacyjnie: czy `modnakiecka-bq` już jest |
 
-Punkt 1.6 - znajdź plik klucza (nazwa może mieć dopisek, np. `modna-kiecka-2 (1).json`):
+Punkt 1.6 - znajdź plik klucza (nazwa może mieć dopisek, np. `modna-kiecka-2 (1).json`; dla konta biuro `N` = `biuro`):
 
 ```bash
 find ~/Downloads ~/Desktop ~/ModnaKiecka ~/.modnakiecka ~/OneDrive* -maxdepth 3 -iname 'modna-kiecka-N*.json' 2>/dev/null
@@ -524,20 +526,43 @@ poproś go, żeby porównał zapytania i trzymał się `CLAUDE.md`.
 | „tabela nie istnieje” dla tabel AIO | brak sufiksu w nazwie | użyj pełnej nazwy z `list_tables` (np. `aio_main_szdsp`) |
 | Liczby inne niż w raporcie zespołu | inne źródło albo inna definicja (z anulowanymi, inny okres) | zapytaj Claude: „z jakiej tabeli i z jakimi filtrami to policzyłeś?” i porównaj z `CLAUDE.md` |
 
-Aktualizacja serwera i zasad (raz na jakiś czas albo gdy administrator poprosi):
+---
+
+## CZĘŚĆ 7 - aktualizacja
+
+Serwer hurtowni nie aktualizuje się sam. Nowe wersje są w repozytorium `modnakiecka-bq-mcp`:
+kod serwera, wbudowana dokumentacja tabel (`docs/`), zasady pracy (`pracownicy/CLAUDE.md`), zapytania wzorcowe
+i skrypty. Lista zmian: `pracownicy/ZMIANY.md`. Sam Claude Code aktualizuje się automatycznie (ręcznie: `claude update`).
+
+**Kiedy:** gdy administrator albo kierownik zespołu da znać o zmianach, a poza tym raz w miesiącu.
+
+**Jak:** uruchom Claude Code w folderze ModnaKiecka i wklej:
 
 ```text
-Zaktualizuj serwer hurtowni: git pull w ~/ModnaKiecka/modnakiecka-bq-mcp, potem krok 2.4 instrukcji
-INSTALACJA_PRACOWNICY.md (uv pip install) i porównaj pracownicy/CLAUDE.md z ~/ModnaKiecka/CLAUDE.md -
-pokaż różnice i zapytaj, czy nadpisać.
+Zaktualizuj dostęp do hurtowni Modna Kiecka według CZĘŚCI 7 instrukcji
+modnakiecka-bq-mcp/INSTALACJA_PRACOWNICY.md. Mój numer konta to N.
 ```
+
+**Kroki dla Claude:**
+
+1. `cd ~/ModnaKiecka/modnakiecka-bq-mcp && git pull` - pokaż użytkownikowi nowe wpisy z `pracownicy/ZMIANY.md`.
+   Jeśli `git pull` zgłasza konflikt (ktoś zmieniał pliki w tym folderze) - nie nadpisuj niczego, pokaż komunikat
+   i poproś o kontakt z administratorem.
+2. Biblioteki - krok 2.4 (to samo polecenie; jest bezpieczne do powtórzenia) i jego sprawdzenie (`biblioteki OK`).
+3. Zasady: porównaj `~/ModnaKiecka/modnakiecka-bq-mcp/pracownicy/CLAUDE.md` z `~/ModnaKiecka/CLAUDE.md` (`diff`).
+   Pokaż różnice i zapytaj, czy nadpisać. Tak samo `pracownicy/settings.json` z `~/ModnaKiecka/.claude/settings.json`
+   (reguły `deny` dopisz, niczego nie usuwaj).
+4. Test połączenia - krok 2.7.
+5. Jeśli zmienił się `server.py`, `requirements.txt` albo `docs/` - powiedz użytkownikowi, żeby zrobił `/exit`
+   i ponownie `claude` (serwer MCP wczyta się na nowo). Rejestracji MCP (krok 2.8) nie trzeba powtarzać.
+6. Podsumuj: co się zmieniło i czy wszystko działa.
 
 ---
 
 ## Dla administratora
 
-- Konta: `modna-kiecka-1` … `modna-kiecka-4` w projekcie `bq-modnakiecka` (nazwy wyświetlane „Modna Kiecka 1-4”),
-  utworzone 13.11.2026. Role na poziomie projektu: `roles/bigquery.dataViewer` + `roles/bigquery.jobUser`
+- Konta: `modna-kiecka-1` … `modna-kiecka-4` (nazwy wyświetlane „Modna Kiecka 1-4”) i `modna-kiecka-biuro`
+  („Biuro Modna Kiecka”) w projekcie `bq-modnakiecka`, utworzone 13.11.2026. Role na poziomie projektu: `roles/bigquery.dataViewer` + `roles/bigquery.jobUser`
   (tak jak istniejące konto analityczne klienta). Zapis zablokowany (sprawdzone próbą `CREATE TABLE`).
 - **Uwaga:** rola na poziomie projektu daje odczyt wszystkich zbiorów danych, w tym kolumn z danymi osobowymi
   (np. e-mail, telefon, adres w surowych tabelach). Zasada nr 6 w `CLAUDE.md` jest instrukcją dla Claude, nie blokadą.
