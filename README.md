@@ -44,6 +44,9 @@ z sufiksem `_szdsp`.
 
 Pełna instrukcja krok po kroku (nowy komputer, od zera): **[INSTALACJA.md](INSTALACJA.md)**.
 
+**Pracownicy Modnej Kiecki (konta Modna Kiecka 1-4):** instrukcja prowadzona przez Claude Code, z audytem
+środowiska, sprawdzonymi pytaniami i pierwszym raportem HTML - **[INSTALACJA_PRACOWNICY.md](INSTALACJA_PRACOWNICY.md)**.
+
 ```bash
 git clone https://github.com/andrzejczyk-adrian/modnakiecka-bq-mcp.git
 cd modnakiecka-bq-mcp
@@ -64,4 +67,6 @@ docs/                kopia dokumentacji AIO (master guide, AIO, 10 tabel)
   introduction.md    przewodnik sesji (fazy 1-3, reguły SQL)
   aio/...            dokumentacja modelu AIO i tabel
 INSTALACJA.md        instrukcja instalacji od zera + prompt do wklejenia
+INSTALACJA_PRACOWNICY.md  instrukcja dla pracowników (konta modna-kiecka-1..4), wykonywana przez Claude Code
+pracownicy/          zasady CLAUDE.md, blokada klucza (settings.json), zapytania wzorcowe, test połączenia, pierwszy raport
 ```

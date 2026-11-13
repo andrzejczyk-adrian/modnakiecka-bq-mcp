@@ -11,3 +11,8 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Gdyby klucz pracownika albo raport z danymi firmy trafił do kopii tego repo - NIGDY nie commitować
+modna-kiecka-*.json
+klucz/
+raporty/
